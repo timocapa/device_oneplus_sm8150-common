@@ -66,6 +66,7 @@ public class DeviceSettings extends PreferenceFragment
     public static final String KEY_AUTO_REFRESH_RATE = "auto_refresh_rate";
     public static final String KEY_FPS_INFO = "fps_info";
     public static final String KEY_ALWAYS_CAMERA_DIALOG = "always_on_camera_dialog";
+    private static final String KEY_ENABLE_DOLBY_ATMOS = "enable_dolby_atmos";
 
     public static final String KEY_SETTINGS_PREFIX = "device_setting_";
 
@@ -84,6 +85,7 @@ public class DeviceSettings extends PreferenceFragment
     private ListPreference mBottomKeyPref;
     private SwitchPreference mAlwaysCameraSwitch;
     private PreferenceCategory mCameraCategory;
+    private static TwoStatePreference mEnableDolbyAtmos;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -139,6 +141,9 @@ public class DeviceSettings extends PreferenceFragment
         } else {
             mCameraCategory.setVisible(false);
         }
+
+        mEnableDolbyAtmos = (TwoStatePreference) findPreference(KEY_ENABLE_DOLBY_ATMOS);
+        mEnableDolbyAtmos.setOnPreferenceChangeListener(this);
     }
 
     @Override
@@ -157,6 +162,22 @@ public class DeviceSettings extends PreferenceFragment
                 this.getContext().startService(fpsinfo);
             } else {
                 this.getContext().stopService(fpsinfo);
+            }
+        } else if (preference == mEnableDolbyAtmos) {
+            boolean enabled = (Boolean) newValue;
+            Intent daxService = new Intent();
+            ComponentName name = new ComponentName("com.dolby.daxservice", "com.dolby.daxservice.DaxService");
+            daxService.setComponent(name);
+            if (enabled) {
+                // enable service component and start service
+                this.getContext().getPackageManager().setComponentEnabledSetting(name,
+                        PackageManager.COMPONENT_ENABLED_STATE_DEFAULT, 0);
+                this.getContext().startService(daxService);
+            } else {
+                // disable service component and stop service
+                this.getContext().stopService(daxService);
+                this.getContext().getPackageManager().setComponentEnabledSetting(name,
+                        PackageManager.COMPONENT_ENABLED_STATE_DISABLED, 0);
             }
         } else if (preference == mAlwaysCameraSwitch) {
             boolean enabled = (Boolean) newValue;
