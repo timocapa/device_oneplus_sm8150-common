@@ -2,4 +2,3 @@
 dontaudit { gmscore_app } { bt_firmware_file firmware_file op1_file mnt_vendor_file}:filesystem getattr;
 dontaudit { priv_app } { bt_firmware_file firmware_file op1_file mnt_vendor_file }:filesystem getattr;
 dontaudit fsck self:capability kill;
-dontaudit linkerconfig self:capability kill;
