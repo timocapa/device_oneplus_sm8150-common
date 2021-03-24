@@ -750,20 +750,6 @@ system_ext/etc/permissions/com.android.hotwordenrollment.common.util.xml
 vendor/etc/init/vendor.oneplus.hardware.ifaa@2.0-service.rc
 vendor/lib64/vendor.oneplus.hardware.ifaa@2.0.so
 
-# IO Prefetcher
-vendor/bin/hw/vendor.qti.hardware.iop@2.0-service
-vendor/etc/init/vendor.qti.hardware.iop@2.0-service.rc
-vendor/lib/hw/vendor.qti.hardware.iop@2.0-impl.so
-vendor/lib/libqti-iopd-client.so
-vendor/lib/libqti-iopd.so
-vendor/lib/vendor.qti.hardware.iop@1.0.so
-vendor/lib/vendor.qti.hardware.iop@2.0.so
-vendor/lib64/hw/vendor.qti.hardware.iop@2.0-impl.so
-vendor/lib64/libqti-iopd-client.so
-vendor/lib64/libqti-iopd.so
-vendor/lib64/vendor.qti.hardware.iop@1.0.so
-vendor/lib64/vendor.qti.hardware.iop@2.0.so
-
 # IPA Firmware
 vendor/firmware/ipa_fws.b00
 vendor/firmware/ipa_fws.b02
@@ -847,13 +833,11 @@ vendor/etc/seccomp_policy/codec2.vendor.ext.policy|6a9a9eb3261048f02805261568097
 vendor/lib/libqcodec2.so|5b2db4026710013897f5535604fb966f1b095741
 vendor/lib64/libqcodec2.so|2252f9084fdc33135d090bed9997ec76aa7d218d
 
-# Media (Video) - from from LA.UM.9.1.r1-09100-SMxxx0.0
+# Media (Video) - from LA.UM.9.1.r1-09100-SMxxx0.0
 vendor/bin/mm-vidc-omx-test|dae9228d82b294218069ba73f4ed9a4f6b8e47ef
 vendor/lib/libI420colorconvert.so|2471423164022733a1bc453355e04726740818b6
-vendor/lib/libfastcrc.so|9274920c249096d4b22581e72e34a60b63e0231c
 vendor/lib/libmm-color-convertor.so|6df18a4c8645407fde1b39ce1b76ce47f357da8e
 vendor/lib/libstreamparser.so|420884a96c948dce1f449f61343471ae4585514a
-vendor/lib/libvideoutils.so|18a1da5a3fa4a6553f7563f614cfdc0bf584fe88
 vendor/lib64/libI420colorconvert.so|0e7d5d65d1401fa491ed578e4ca6d9e56a2b249a
 vendor/lib64/libmm-color-convertor.so|8aac378d264e7cf9e3a7e97bba81ffbed3e3bd3e
 
@@ -985,42 +969,6 @@ vendor/lib64/libswvdec.so|888b704def0068f0ec882aa5227ba78bec56d522
 # OpFeature
 vendor/bin/opf-service
 vendor/etc/init/init.opf.rc
-
-# Perf
--vendor/app/pasrservice/pasrservice.apk
-vendor/bin/hw/vendor.qti.hardware.perf@2.0-service
-vendor/bin/hw/vendor.qti.power.pasrmanager@1.0-service
-vendor/bin/msm_irqbalance
-vendor/etc/init/vendor.qti.hardware.perf@2.0-service.rc
-vendor/etc/init/vendor.qti.power.pasrmanager@1.0-service.rc
-vendor/etc/lm/AppClassifierFeature.xml
-vendor/etc/perf/commonresourceconfigs.xml
-vendor/etc/perf/perfboostsconfig.xml
-vendor/etc/perf/perfconfigstore.xml
-vendor/etc/perf/targetconfig.xml
-vendor/etc/perf/targetresourceconfigs.xml
-vendor/etc/powerhint.xml
-vendor/lib/hw/vendor.qti.power.pasrmanager@1.0-impl.so
-vendor/lib/libperfgluelayer.so
-vendor/lib/libqti-perfd-client.so
-vendor/lib/libqti-perfd.so
-vendor/lib/libqti-util.so
-vendor/lib/libqti-utils.so
-vendor/lib/vendor.qti.hardware.perf@2.0.so
-vendor/lib64/hw/vendor.qti.power.pasrmanager@1.0-impl.so
-vendor/lib64/libadaptlaunch.so
-vendor/lib64/libappclassifier.so
-vendor/lib64/libgameoptfeature.so
-vendor/lib64/liblearningmodule.so
-vendor/lib64/libmeters-ns.so
-vendor/lib64/libmeters.so
-vendor/lib64/libperfgluelayer.so
-vendor/lib64/libqti-perfd-client.so
-vendor/lib64/libqti-perfd.so
-vendor/lib64/libqti-util.so
-vendor/lib64/libqti-utils.so
-vendor/lib64/vendor.qti.hardware.perf@2.0.so
-vendor/lib64/vendor.qti.power.pasrmanager@1.0.so
 
 # Peripheral manager
 vendor/bin/pm-proxy
@@ -1283,12 +1231,6 @@ vendor/lib/vendor.qti.hardware.sensorscalibrate@1.0.so
 vendor/lib64/libsensorslog.so
 vendor/lib64/libssc_default_listener.so
 vendor/lib64/vendor.qti.hardware.sensorscalibrate@1.0.so
-
-# Servicetracker
-vendor/bin/hw/vendor.qti.hardware.servicetracker@1.0-service
-vendor/etc/init/vendor.qti.hardware.servicetracker@1.0-service.rc
-vendor/lib/hw/vendor.qti.hardware.servicetracker@1.0-impl.so
-vendor/lib64/hw/vendor.qti.hardware.servicetracker@1.0-impl.so
 
 # Snapdragon Computer Vision Engine
 product/lib/vendor.qti.hardware.scve.objecttracker@1.0-adapter-helper.so

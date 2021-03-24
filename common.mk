@@ -9,6 +9,9 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/updatable_apex.mk)
 # Get non-open-source specific aspects
 $(call inherit-product-if-exists, vendor/oneplus/sm8150-common/sm8150-common-vendor.mk)
 
+# Inherit QTI Components
+$(call inherit-product, device/qcom/common/common.mk)
+
 # Additional native libraries
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/public.libraries.txt:$(TARGET_COPY_OUT_VENDOR)/etc/public.libraries.txt
@@ -346,7 +349,6 @@ PRODUCT_PACKAGES += \
     android.hardware.lights-service.qti
 
 # Media
-
 PRODUCT_PACKAGES += \
     libavservices_minijail \
     libavservices_minijail_vendor
@@ -416,15 +418,19 @@ PRODUCT_PACKAGES += \
 PRODUCT_BOOT_JARS += \
     oneplus-fwk.oneplus_msmnile
 
-# Power
-PRODUCT_PACKAGES += \
-    android.hardware.power-service-qti
+# Platform
+PRODUCT_USES_QCOM_HARDWARE := true
+TARGET_BOARD_PLATFORM := msmnile
 
 # QMI
 PRODUCT_PACKAGES += \
     libjson \
     libqti_vndfwk_detect \
     libqti_vndfwk_detect.vendor
+
+# QTI Components
+TARGET_COMMON_QTI_COMPONENTS := \
+    perf
 
 # RIL
 PRODUCT_PACKAGES += \
@@ -436,10 +442,7 @@ PRODUCT_PACKAGES += \
 
 # Seccomp policy
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/seccomp/mediacodec-seccomp.policy:$(TARGET_COPY_OUT_VENDOR)/etc/seccomp_policy/mediacodec.policy \
-    $(LOCAL_PATH)/seccomp/mediaextractor-seccomp.policy:$(TARGET_COPY_OUT_VENDOR)/etc/seccomp_policy/mediaextractor.policy \
-    $(LOCAL_PATH)/seccomp/codec2.vendor.base.policy:$(TARGET_COPY_OUT_VENDOR)/etc/seccomp_policy/codec2.vendor.base.policy \
-    $(LOCAL_PATH)/seccomp/codec2.vendor.ext.policy:$(TARGET_COPY_OUT_VENDOR)/etc/seccomp_policy/codec2.vendor.ext.policy
+    $(LOCAL_PATH)/seccomp/codec2.vendor.base.policy:$(TARGET_COPY_OUT_VENDOR)/etc/seccomp_policy/codec2.vendor.base.policy
 
 # Sensors
 PRODUCT_PACKAGES += \
