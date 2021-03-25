@@ -829,7 +829,6 @@ vendor/bin/hw/vendor.qti.media.c2@1.0-service|711fc86b6a7768ba844155b61debdda4e2
 vendor/etc/init/vendor.qti.media.c2@1.0-service.rc|11209316ba8aae64b689217bc13b0804f6620678
 vendor/etc/media_codecs_c2.xml|7b7525653c6f4cb072c49af087e24a0a3b7f85d6
 vendor/etc/seccomp_policy/codec2.vendor.base.policy|05b0779b5da2ea640984d46a46a796edeaab5fab
-vendor/etc/seccomp_policy/codec2.vendor.ext.policy|6a9a9eb3261048f02805261568097410e1a23b2d
 vendor/lib/libqcodec2.so|5b2db4026710013897f5535604fb966f1b095741
 vendor/lib64/libqcodec2.so|2252f9084fdc33135d090bed9997ec76aa7d218d
 
