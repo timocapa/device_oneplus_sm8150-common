@@ -418,10 +418,6 @@ PRODUCT_PACKAGES += \
 PRODUCT_BOOT_JARS += \
     oneplus-fwk.oneplus_msmnile
 
-# Platform
-PRODUCT_USES_QCOM_HARDWARE := true
-TARGET_BOARD_PLATFORM := msmnile
-
 # Power
 PRODUCT_PACKAGES += \
     android.hardware.power-service-qti
