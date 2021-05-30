@@ -25,12 +25,14 @@ import android.provider.Settings;
 import android.text.TextUtils;
 import androidx.preference.PreferenceManager;
 
+import com.yaap.device.DeviceSettings.DolbySwitch;
 import com.yaap.device.DeviceSettings.TouchscreenGestureSettings;
 
 public class Startup extends BroadcastReceiver {
 
     private static final String TAG = "BootReceiver";
     private static final String ONE_TIME_TUNABLE_RESTORE = "hardware_tunable_restored";
+    private static final String ONE_TIME_DOLBY = "dolby_init_disabled";
 
     private void restore(String file, boolean enabled) {
         if (file == null) {
@@ -70,6 +72,14 @@ public class Startup extends BroadcastReceiver {
         enabled = sharedPrefs.getBoolean(DeviceSettings.KEY_FPS_INFO, false);
         if (enabled) {
             context.startService(new Intent(context, FPSInfoService.class));
+        }
+        // handling dolby
+        enabled = sharedPrefs.getBoolean(ONE_TIME_DOLBY, false);
+        if (!enabled) {
+            // we want to disable it by default, only once.
+            DolbySwitch dolbySwitch = new DolbySwitch(context);
+            dolbySwitch.setEnabled(false);
+            sharedPrefs.edit().putBoolean(ONE_TIME_DOLBY, true).apply();
         }
     }
 

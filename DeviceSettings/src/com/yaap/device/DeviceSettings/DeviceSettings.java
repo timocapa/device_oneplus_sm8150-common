@@ -47,6 +47,7 @@ import androidx.preference.TwoStatePreference;
 
 import com.android.internal.util.yaap.FileUtils;
 import com.yaap.device.DeviceSettings.Constants;
+import com.yaap.device.DeviceSettings.DolbySwitch;
 
 public class DeviceSettings extends PreferenceFragment
         implements Preference.OnPreferenceChangeListener {
@@ -75,6 +76,7 @@ public class DeviceSettings extends PreferenceFragment
             Build.DEVICE.equals("OnePlus7TPro") ||
             Build.DEVICE.equals("OnePlus7TProNR");
 
+    private DolbySwitch mDolbySwitch;
     private static TwoStatePreference mHBMModeSwitch;
     private static TwoStatePreference mDCModeSwitch;
     private static TwoStatePreference mRefreshRate;
@@ -142,7 +144,9 @@ public class DeviceSettings extends PreferenceFragment
             mCameraCategory.setVisible(false);
         }
 
+        mDolbySwitch = new DolbySwitch(this.getContext());
         mEnableDolbyAtmos = (TwoStatePreference) findPreference(KEY_ENABLE_DOLBY_ATMOS);
+        mEnableDolbyAtmos.setChecked(mDolbySwitch.isCurrentlyEnabled());
         mEnableDolbyAtmos.setOnPreferenceChangeListener(this);
     }
 
@@ -164,21 +168,7 @@ public class DeviceSettings extends PreferenceFragment
                 this.getContext().stopService(fpsinfo);
             }
         } else if (preference == mEnableDolbyAtmos) {
-            boolean enabled = (Boolean) newValue;
-            Intent daxService = new Intent();
-            ComponentName name = new ComponentName("com.dolby.daxservice", "com.dolby.daxservice.DaxService");
-            daxService.setComponent(name);
-            if (enabled) {
-                // enable service component and start service
-                this.getContext().getPackageManager().setComponentEnabledSetting(name,
-                        PackageManager.COMPONENT_ENABLED_STATE_DEFAULT, 0);
-                this.getContext().startService(daxService);
-            } else {
-                // disable service component and stop service
-                this.getContext().stopService(daxService);
-                this.getContext().getPackageManager().setComponentEnabledSetting(name,
-                        PackageManager.COMPONENT_ENABLED_STATE_DISABLED, 0);
-            }
+            mDolbySwitch.setEnabled((Boolean) newValue);
         } else if (preference == mAlwaysCameraSwitch) {
             boolean enabled = (Boolean) newValue;
             Settings.System.putInt(getContext().getContentResolver(),
