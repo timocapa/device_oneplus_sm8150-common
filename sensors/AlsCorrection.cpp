@@ -18,6 +18,7 @@
 
 #include <cutils/properties.h>
 #include <fstream>
+#include <cmath>
 #include <log/log.h>
 #include <time.h>
 
@@ -27,8 +28,9 @@ namespace sensors {
 namespace V2_1 {
 namespace implementation {
 
-static int red_max_lux, green_max_lux, blue_max_lux, white_max_lux, max_brightness;
-static int als_bias;
+static int red_max_lux, green_max_lux, blue_max_lux, white_max_lux, max_brightness, cali_coe;
+static int als_bias, max_lux, test, not_good_cnt;
+static float coeff_a, coeff_b, algo_bias, prev_light_corrected;
 
 template <typename T>
 static T get(const std::string& path, const T& def) {
@@ -45,8 +47,16 @@ void AlsCorrection::init() {
     blue_max_lux = get("/mnt/vendor/persist/engineermode/blue_max_lux", 0);
     white_max_lux = get("/mnt/vendor/persist/engineermode/white_max_lux", 0);
     als_bias = get("/mnt/vendor/persist/engineermode/als_bias", 0);
+    cali_coe = get("/mnt/vendor/persist/engineermode/cali_coe", 1000);
     max_brightness = get("/sys/class/backlight/panel0-backlight/max_brightness", 255);
-    ALOGV("max r = %d, max g = %d, max b = %d", red_max_lux, green_max_lux, blue_max_lux);
+    max_lux = red_max_lux + green_max_lux + blue_max_lux + white_max_lux;
+    ALOGD("max r = %d, max g = %d, max b = %d, max_white: %d, cali_coe: %d, als_bias: %d, max_brightness: %d, max_lux: %d", red_max_lux, green_max_lux, blue_max_lux, white_max_lux, cali_coe, als_bias, max_brightness, max_lux);
+    test = 0;
+    coeff_a = 1.43f;
+    coeff_b = 2.0f;
+    not_good_cnt = 0;
+    algo_bias = 0.0f;
+    prev_light_corrected = 0.0f;
 }
 
 void AlsCorrection::correct(float& light) {
@@ -61,27 +71,36 @@ void AlsCorrection::correct(float& light) {
     ALOGV("Original reading: %f", light);
     int screen_brightness = get("/sys/class/backlight/panel0-backlight/brightness", 0);
     float correction = 0.0f;
-    if (red_max_lux > 0 && green_max_lux > 0 && blue_max_lux > 0 && white_max_lux > 0) {
-        uint8_t rgb_min = std::min({r, g, b});
+    float brightness_factor = 0.0f;
+    float frac = 0.0f;
+    float exp = 0.0f;
+    float rgb_avg = 0.0f;
+    uint32_t rgb_min = 0;
+    float light_frac = 0.0f;
+    float coe_frac = ((float) cali_coe) / 1000.0f;
+    if (max_lux > 0) {
+        frac = ((float) screen_brightness) / ((float) max_brightness);
+        light_frac = (light > max_lux) ? 1.0f : light/((float) max_lux);
+        rgb_min = std::min({r, g, b});
+        rgb_avg = (r + g + b)/3/255.0f;
         correction += ((float) rgb_min) / 255.0f * ((float) white_max_lux);
-        r -= rgb_min;
-        g -= rgb_min;
-        b -= rgb_min;
         correction += ((float) r) / 255.0f * ((float) red_max_lux);
         correction += ((float) g) / 255.0f * ((float) green_max_lux);
         correction += ((float) b) / 255.0f * ((float) blue_max_lux);
-        correction = correction * (((float) screen_brightness) / ((float) max_brightness));
         correction += als_bias;
+        correction = correction/max_lux;
+        light_frac = light_frac * coe_frac + light_frac * std::pow(correction, 0.2f); // frac of lux reading that is due to screen brightness
+        exp = (correction < 0.1f) ? 1.2f - std::pow(frac, 0.05f) : 1.2f - std::pow(correction*frac, 0.2f);
+        brightness_factor = std::pow(frac, exp);
+        light_frac = light_frac * brightness_factor;
+        light_frac = (light > max_lux) ? light_frac - (light - max_lux)/((float) max_lux) : light_frac;
+        light_frac = (light_frac > 0.65f) ? 0.65f : light_frac < 0.0f ? 0.1f : light_frac;
     }
     // Do not apply correction if < 0, prevent unstable adaptive brightness
-    if (light - correction >= 0) {
-        light -= correction;
-    } else {
-        // In low light conditions, sensor is just reporting bad values, using
-        // computed correction instead allows to fix the issue
-        light = correction;
-    }
-    ALOGV("Corrected reading: %f", light);
+    ALOGD("Original: %f  Corrected: %f Correction: %f brightness: %d brightness_factor: %f exp: %f light_frac: %f", light, light * (1.0f - light_frac), correction, screen_brightness, brightness_factor, exp, light_frac);
+    light = light * (1.0f - light_frac);
+    not_good_cnt = 0;
+    prev_light_corrected = light;
 }
 
 }  // namespace implementation
