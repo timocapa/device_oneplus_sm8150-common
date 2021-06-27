@@ -165,30 +165,25 @@ PRODUCT_PACKAGES += \
 
 # Common init scripts
 PRODUCT_PACKAGES += \
-    ftm_power_config.sh \
     init.class_main.sh \
-    init.cust.rc \
-    init.oem.debug.rc \
-    init.oem.rc \
-    init.oem_ftm.rc \
+    init.oneplus.rc \
+    init.oneplus.camera.rc \
+    init.oneplus.display.rc \
+    init.oneplus.fingerprint.rc \
+    init.oneplus.nfc.rc \
+    init.oneplus.usb.rc \
+    init.oneplus.vibrator.rc \
     init.qcom.class_core.sh \
     init.qcom.early_boot.sh \
-    init.qcom.factory.rc \
     init.qcom.post_boot.sh \
     init.qcom.rc \
-    init.qcom.sensors.sh \
     init.qcom.sh \
-    init.qcom.usb.rc \
-    init.qcom.usb.sh \
     init.qti.chg_policy.sh \
     init.qti.dcvs.sh \
     init.qti.qcv.sh \
-    init.qti.ufs.rc \
     init.recovery.qcom.rc \
     init.target.rc \
-    ueventd.qcom.rc \
-    vendor.oem_ftm.rc \
-    vendor.oem_ftm_svc_disable.rc
+    ueventd.qcom.rc
 
 # Component overrides
 PRODUCT_COPY_FILES += \
@@ -436,6 +431,13 @@ PRODUCT_PACKAGES_DEBUG += \
 # USB
 PRODUCT_PACKAGES += \
     android.hardware.usb@1.0-service
+
+PRODUCT_PACKAGES += \
+    init.qcom.usb.rc \
+    init.qcom.usb.sh
+
+PRODUCT_SOONG_NAMESPACES += \
+    vendor/qcom/opensource/usb/etc
 
 # Wifi
 PRODUCT_PACKAGES += \

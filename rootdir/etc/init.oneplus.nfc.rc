@@ -1,0 +1,9 @@
+on boot
+    # NFC
+    chmod 0666 /dev/pn553
+    chown nfc nfc /dev/pn553
+    chmod 0666 /dev/p73
+    chown secure_element secure_element /dev/p73
+
+on post-fs-data
+    mkdir /data/vendor/nfc 0770 nfc nfc

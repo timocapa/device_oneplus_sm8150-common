@@ -1,0 +1,78 @@
+on fs
+    # Alert Slider
+    chown system system /sys/bus/platform/devices/soc/soc\:tri_state_key/hall_data_calib
+    chown system system /sys/bus/platform/devices/soc/soc\:tri_state_key/hall_set_value
+
+    # TP firmware update
+    write /sys/devices/platform/soc/a94000.i2c/i2c-4/4-004b/tp_fw_update 0
+    write /sys/devices/platform/soc/a94000.i2c/i2c-4/4-0048/tp_fw_update 0
+    write /sys/devices/platform/soc/984000.i2c/i2c-4/4-005d/tp_fw_update 0
+    write /sys/devices/platform/soc/984000.i2c/i2c-4/4-0048/tp_fw_update 0
+    write /sys/devices/platform/soc/a94000.i2c/i2c-4/4-005d/tp_fw_update 0
+    write /sys/devices/platform/soc/880000.spi/spi_master/spi0/spi0.0/tp_fw_update 0
+
+    # Thermal
+    chown system system /dev/msm_thermal
+    chown system system /dev/skin_thermal
+    chown system system /dev/modem_skin_thermal
+    chown system system /dev/mmw0_thermal
+    chown system system /dev/mmw1_thermal
+    chown system system /dev/mmw2_thermal
+    chmod 0664 /dev/msm_thermal
+    chmod 0664 /dev/skin_thermal
+    chmod 0664 /dev/modem_skin_thermal
+    chmod 0664 /dev/mmw0_thermal
+    chmod 0664 /dev/mmw1_thermal
+    chmod 0664 /dev/mmw2_thermal
+
+on boot
+    # Infrared proximity sensor
+    chown system system /sys/devices/platform/vendor/vendor:infrared_pl/infrared_power_enable
+    chmod 0666 /sys/devices/platform/vendor/vendor:infrared_pl/infrared_power_enable
+
+    # Event nodes for Ultrasonic and Infrared
+    chmod 0666 /dev/input/event1
+    chmod 0666 /dev/input/event2
+    chmod 0666 /dev/input/event6
+    chmod 0666 /dev/input/event8
+    chmod 0666 /dev/input/event9
+    chmod 0666 /dev/input/event10
+    chmod 0666 /dev/input/event11
+
+    chown system system /dev/input/event12
+    chmod 0666 /dev/input/event12
+
+    # Ultrasound Nodes
+    chown system system /dev/elliptic0
+    chmod 0644 /dev/elliptic0
+    chown system system /dev/elliptic1
+    chmod 0644 /dev/elliptic1
+    chmod 0666 /dev/audio_ultrasound
+    chmod 0666 /dev/sensor_ultrasound
+
+on post-fs
+    # WiFi
+    write /mnt/vendor/persist/wlan_mac.bin ""
+    chown wifi wifi /mnt/vendor/persist/wlan_mac.bin
+
+    # Engineermode
+    mkdir /mnt/vendor/persist/engineermode  0777 system system
+
+    # Param
+    chown system system /dev/param
+
+on post-fs-data
+    # WiFi
+    mkdir /data/vendor/oemnvitems 0771 radio radio
+
+    # HDCP key provisioning
+    mkdir /mnt/vendor/persist/hdcp/media_dump 0770 mediaex mediadrm
+    mkdir /mnt/vendor/persist/hdcp  775 media mediadrm
+    restorecon /mnt/vendor/persist/hdcp
+
+    # Create directory for ultrasound_monitor
+    mkdir /data/vendor/audio/ultrasound 0770 media audio
+
+on property:ro.boot.product.hardware.sku=9
+    setprop persist.radio.multisim.config ssss
+    setprop persist.vendor.radio.uicc_se_enabled true
