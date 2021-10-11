@@ -412,7 +412,8 @@ PRODUCT_SOONG_NAMESPACES += \
     $(LOCAL_PATH) \
     hardware/oneplus \
     hardware/qcom-caf/sm8150 \
-    hardware/qcom-caf/wlan
+    hardware/qcom-caf/wlan \
+    vendor/qcom/opensource/power
 
 # Telephony
 PRODUCT_PACKAGES += \
